@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<!--  <mvc:resources mapping="/WEB-INF/views/image/**" location="/WEB-INF/views/image/" />
+	<mvc:resources mapping="/WEB-INF/views/css/**" location="/WEB-INF/views/css/" />
+	<mvc:resources mapping="/WEB-INF/views/js/**" location="/WEB-INF/views/js/" /> -->
+	
+	
+	
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="1"/>
+	</beans:bean>  
+	
+	 <beans:bean id="viewResolver1" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".html" />
+		<beans:property name="order" value="2"/>
+	</beans:bean>
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+		 <beans:property name="maxUploadSize" value="209715200" />     
+      	 <beans:property name="defaultEncoding" value="UTF-8" />  
+    	 <beans:property name="resolveLazily" value="true" />  
+	</beans:bean> 
+	
+	<!-- <beans:bean name="/hello.htm" class="au.usyd.elec5619.web.HelloController"/> -->
+	
+	<context:component-scan base-package="au.usyd.elec5619" />
+	<mvc:annotation-driven />
+	<!--  <beans:bean id="productManager" class="au.usyd.elec5619.service.SimpleProductManager">
+		<beans:property name="products">
+			<beans:list>
+				<beans:ref bean="product1"/>
+				<beans:ref bean="product2"/>
+				<beans:ref bean="product3"/>
+			</beans:list>
+		</beans:property>
+	</beans:bean>  -->
+	
+	<beans:bean id="product1" class="au.usyd.elec5619.domain.Product">
+		<beans:property name="description" value="Lamp"></beans:property>
+		<beans:property name="price" value="5.75"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="product2" class="au.usyd.elec5619.domain.Product">
+		<beans:property name="description" value="Table"></beans:property>
+		<beans:property name="price" value="75.25"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="product3" class="au.usyd.elec5619.domain.Product">
+		<beans:property name="description" value="Chair"></beans:property>
+		<beans:property name="price" value="22.79"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<beans:property name="basename" value="messages"></beans:property>
+	</beans:bean>
+	
+	<beans:bean name="/hello.htm" class="au.usyd.elec5619.web.InventoryController">
+		<beans:property name="productManager" ref="productManager"></beans:property>
+	</beans:bean>
+	
+
+	
+	<beans:bean name="/priceincrease.htm" class="au.usyd.elec5619.web.PriceIncreaseFormController">
+		<beans:property name="sessionForm" value="true" />
+		<beans:property name="commandName" value="priceIncrease" />
+		<beans:property name="commandClass" value="au.usyd.elec5619.service.PriceIncrease" />
+		<beans:property name="validator" >
+			<beans:bean class="au.usyd.elec5619.service.PriceIncreaseValidator" />
+		</beans:property>
+		<beans:property name="formView" value="priceincrease" />
+		<beans:property name="successView" value="hello.htm" />
+		<beans:property name="productManager" ref="productManager" />
+		
+	</beans:bean>
+</beans:beans>
